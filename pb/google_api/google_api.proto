@@ -1,0 +1,800 @@
+syntax = "proto3";
+
+package ai.somin.service.google_api;
+
+option go_package = "gitlab.somin.ai/analytics/platform/services/google_api/pb/google_api";
+
+service GoogleApi {
+  rpc ExchangeCode(ExchangeCodeRequest) returns (ExchangeCodeResponse);
+  rpc GetOAuthUrl(GetOAuthUrlRequest) returns (GetOAuthUrlResponse);
+  rpc RefreshToken(RefreshTockenRequest) returns (RefreshTockenResponse);
+
+  rpc GetCustomers(GetCustomersRequest) returns (GetCustomersResponse);
+  rpc GetCampaigns(GetCampaignsRequest) returns (GetCampaignsResponse);
+  rpc GetAdGroups(GetAdGroupsRequest) returns (GetAdGroupsResponse);
+  rpc GetAdGroupsAd(GetAdGroupsAdRequest) returns (GetAdGroupsAdResponse);
+
+  rpc GetCampaignCriteria(GetCampaignCriteriaRequest) returns (GetCampaignCriteriaResponse);
+  rpc GetAdGroupsCriteria(GetAdGroupsCriteriaRequest) returns (GetAdGroupsCriteriaResponse);
+}
+
+message GetAdGroupsCriteriaRequest {
+  string token = 1;
+  string customer_id = 2;
+}
+
+message AdGroupsCriteria {
+  string keyword = 1;
+  string ad_group_name = 2;
+  string campaign_name = 3;
+  int64 impressions = 4;
+  int64 clicks = 5;
+  float ctr = 6;
+  float average_cpc = 7;
+}
+
+message GetAdGroupsCriteriaResponse {
+  repeated AdGroupsCriteria ad_groups_criteria = 1;
+}
+
+message GetCampaignCriteriaRequest {
+  string token = 1;
+  string customer_id = 2;
+  int64 campaignId = 3;
+}
+
+message CampaignCriteria {
+  int64 criterion_id = 1;
+  string resource_name = 2;
+  string campaign = 3;
+  string display_name = 4;
+  float bid_modifier = 5;
+  bool negative = 6;
+}
+
+message GetCampaignCriteriaResponse {
+  repeated CampaignCriteria campaign_criteria = 1;
+}
+
+message ExchangeCodeRequest {
+  string code = 1;
+}
+
+message ExchangeCodeResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expire_in = 3;
+  int64 created_at = 4;
+}
+
+message GetOAuthUrlResponse {
+  string url = 1;
+}
+
+message GetOAuthUrlRequest {
+  string redirect_url = 1;
+}
+
+message RefreshTockenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTockenResponse {
+  string token = 1;
+}
+
+message GetCustomersRequest{
+  string token = 1;
+}
+
+message GetCustomersResponse{
+  repeated string customer_ids = 1;
+}
+
+message GetCampaignsRequest{
+  string customer_id = 1;
+  string token = 2;
+}
+
+// Container for enum describing possible statuses of an ad group.
+message AdGroupStatusEnum {
+  // The possible statuses of an ad group.
+  enum AdGroupStatus {
+    // The status has not been specified.
+    UNSPECIFIED = 0;
+
+    // The received value is not known in this version.
+    //
+    // This is a response-only value.
+    UNKNOWN = 1;
+
+    // The ad group is enabled.
+    ENABLED = 2;
+
+    // The ad group is paused.
+    PAUSED = 3;
+
+    // The ad group is removed.
+    REMOVED = 4;
+  }
+}
+
+// Defines types of an ad group, specific to a particular campaign channel
+// type. This type drives validations that restrict which entities can be
+// added to the ad group.
+message AdGroupTypeEnum {
+  // Enum listing the possible types of an ad group.
+  enum AdGroupType {
+    // The type has not been specified.
+    UNSPECIFIED = 0;
+
+    // The received value is not known in this version.
+    //
+    // This is a response-only value.
+    UNKNOWN = 1;
+
+    // The default ad group type for Search campaigns.
+    SEARCH_STANDARD = 2;
+
+    // The default ad group type for Display campaigns.
+    DISPLAY_STANDARD = 3;
+
+    // The ad group type for Shopping campaigns serving standard product ads.
+    SHOPPING_PRODUCT_ADS = 4;
+
+    // The default ad group type for Hotel campaigns.
+    HOTEL_ADS = 6;
+
+    // The type for ad groups in Smart Shopping campaigns.
+    SHOPPING_SMART_ADS = 7;
+
+    // Short unskippable in-stream video ads.
+    VIDEO_BUMPER = 8;
+
+    // TrueView (skippable) in-stream video ads.
+    VIDEO_TRUE_VIEW_IN_STREAM = 9;
+
+    // TrueView in-display video ads.
+    VIDEO_TRUE_VIEW_IN_DISPLAY = 10;
+
+    // Unskippable in-stream video ads.
+    VIDEO_NON_SKIPPABLE_IN_STREAM = 11;
+
+    // Outstream video ads.
+    VIDEO_OUTSTREAM = 12;
+
+    // Ad group type for Dynamic Search Ads ad groups.
+    SEARCH_DYNAMIC_ADS = 13;
+
+    // The type for ad groups in Shopping Comparison Listing campaigns.
+    SHOPPING_COMPARISON_LISTING_ADS = 14;
+
+    // The ad group type for Promoted Hotel ad groups.
+    PROMOTED_HOTEL_ADS = 15;
+
+    // Video responsive ad groups.
+    VIDEO_RESPONSIVE = 16;
+
+    // Video efficient reach ad groups.
+    VIDEO_EFFICIENT_REACH = 17;
+
+    // Ad group type for Smart campaigns.
+    SMART_CAMPAIGN_ADS = 18;
+  }
+}
+
+// Container for enum describing the possible placements of an asset.
+message AssetFieldTypeEnum {
+  // Enum describing the possible placements of an asset.
+  enum AssetFieldType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // The asset is linked for use as a headline.
+    HEADLINE = 2;
+
+    // The asset is linked for use as a description.
+    DESCRIPTION = 3;
+
+    // The asset is linked for use as mandatory ad text.
+    MANDATORY_AD_TEXT = 4;
+
+    // The asset is linked for use as a marketing image.
+    MARKETING_IMAGE = 5;
+
+    // The asset is linked for use as a media bundle.
+    MEDIA_BUNDLE = 6;
+
+    // The asset is linked for use as a YouTube video.
+    YOUTUBE_VIDEO = 7;
+
+    // The asset is linked to indicate that a hotels campaign is "Book on
+    // Google" enabled.
+    BOOK_ON_GOOGLE = 8;
+
+    // The asset is linked for use as a Lead Form extension.
+    LEAD_FORM = 9;
+
+    // The asset is linked for use as a Promotion extension.
+    PROMOTION = 10;
+
+    // The asset is linked for use as a Callout extension.
+    CALLOUT = 11;
+
+    // The asset is linked for use as a Structured Snippet extension.
+    STRUCTURED_SNIPPET = 12;
+
+    // The asset is linked for use as a Sitelink extension.
+    SITELINK = 13;
+  }
+}
+
+message OptimizationGoalTypeEnum {
+  // The type of optimization goal
+  enum OptimizationGoalType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used as a return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Optimize for call clicks. Call click conversions are times people
+    // selected 'Call' to contact a store after viewing an ad.
+    CALL_CLICKS = 2;
+
+    // Optimize for driving directions. Driving directions conversions are
+    // times people selected 'Get directions' to navigate to a store after
+    // viewing an ad.
+    DRIVING_DIRECTIONS = 3;
+  }
+}
+
+// The display mode for vanity pharma URLs.
+message VanityPharmaDisplayUrlModeEnum {
+  // Enum describing possible display modes for vanity pharma URLs.
+  enum VanityPharmaDisplayUrlMode {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Replace vanity pharma URL with manufacturer website url.
+    MANUFACTURER_WEBSITE_URL = 2;
+
+    // Replace vanity pharma URL with description of the website.
+    WEBSITE_DESCRIPTION = 3;
+  }
+}
+
+// The text that will be displayed in display URL of the text ad when website
+// description is the selected display mode for vanity pharma URLs.
+message VanityPharmaTextEnum {
+  // Enum describing possible text.
+  enum VanityPharmaText {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Prescription treatment website with website content in English.
+    PRESCRIPTION_TREATMENT_WEBSITE_EN = 2;
+
+    // Prescription treatment website with website content in Spanish
+    // (Sitio de tratamientos con receta).
+    PRESCRIPTION_TREATMENT_WEBSITE_ES = 3;
+
+    // Prescription device website with website content in English.
+    PRESCRIPTION_DEVICE_WEBSITE_EN = 4;
+
+    // Prescription device website with website content in Spanish (Sitio de
+    // dispositivos con receta).
+    PRESCRIPTION_DEVICE_WEBSITE_ES = 5;
+
+    // Medical device website with website content in English.
+    MEDICAL_DEVICE_WEBSITE_EN = 6;
+
+    // Medical device website with website content in Spanish (Sitio de
+    // dispositivos médicos).
+    MEDICAL_DEVICE_WEBSITE_ES = 7;
+
+    // Preventative treatment website with website content in English.
+    PREVENTATIVE_TREATMENT_WEBSITE_EN = 8;
+
+    // Preventative treatment website with website content in Spanish (Sitio de
+    // tratamientos preventivos).
+    PREVENTATIVE_TREATMENT_WEBSITE_ES = 9;
+
+    // Prescription contraception website with website content in English.
+    PRESCRIPTION_CONTRACEPTION_WEBSITE_EN = 10;
+
+    // Prescription contraception website with website content in Spanish (Sitio
+    // de anticonceptivos con receta).
+    PRESCRIPTION_CONTRACEPTION_WEBSITE_ES = 11;
+
+    // Prescription vaccine website with website content in English.
+    PRESCRIPTION_VACCINE_WEBSITE_EN = 12;
+
+    // Prescription vaccine website with website content in Spanish (Sitio de
+    // vacunas con receta).
+    PRESCRIPTION_VACCINE_WEBSITE_ES = 13;
+  }
+}
+
+// Container for enum with 3-Tier brand safety suitability control.
+message BrandSafetySuitabilityEnum {
+  // 3-Tier brand safety suitability control.
+  enum BrandSafetySuitability {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // This option lets you show ads across all inventory on YouTube and video
+    // partners that meet our standards for monetization. This option may be an
+    // appropriate choice for brands that want maximum access to the full
+    // breadth of videos eligible for ads, including, for example, videos that
+    // have strong profanity in the context of comedy or a documentary, or
+    // excessive violence as featured in video games.
+    EXPANDED_INVENTORY = 2;
+
+    // This option lets you show ads across a wide range of content that's
+    // appropriate for most brands, such as popular music videos, documentaries,
+    // and movie trailers. The content you can show ads on is based on YouTube's
+    // advertiser-friendly content guidelines that take into account, for
+    // example, the strength or frequency of profanity, or the appropriateness
+    // of subject matter like sensitive events. Ads won't show, for example, on
+    // content with repeated strong profanity, strong sexual content, or graphic
+    // violence.
+    STANDARD_INVENTORY = 3;
+
+    // This option lets you show ads on a reduced range of content that's
+    // appropriate for brands with particularly strict guidelines around
+    // inappropriate language and sexual suggestiveness; above and beyond what
+    // YouTube's advertiser-friendly content guidelines address. The videos
+    // accessible in this sensitive category meet heightened requirements,
+    // especially for inappropriate language and sexual suggestiveness. For
+    // example, your ads will be excluded from showing on some of YouTube's most
+    // popular music videos and other pop culture content across YouTube and
+    // Google video partners.
+    LIMITED_INVENTORY = 4;
+  }
+}
+
+// Used to distinguish the location source type.
+message LocationSourceTypeEnum {
+  // The possible types of a location source.
+  enum LocationSourceType {
+    // No value has been specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Locations associated with the customer's linked Google My Business
+    // account.
+    GOOGLE_MY_BUSINESS = 2;
+
+    // Affiliate (chain) store locations. For example, Best Buy store locations.
+    AFFILIATE = 3;
+  }
+}
+
+// Container for enum describing possible payment modes.
+message PaymentModeEnum {
+  // Enum describing possible payment modes.
+  enum PaymentMode {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Pay per click.
+    CLICKS = 4;
+
+    // Pay per conversion value. This mode is only supported by campaigns with
+    // AdvertisingChannelType.HOTEL, BiddingStrategyType.COMMISSION, and
+    // BudgetType.HOTEL_ADS_COMMISSION.
+    CONVERSION_VALUE = 5;
+
+    // Pay per conversion. This mode is only supported by campaigns with
+    // AdvertisingChannelType.DISPLAY (excluding
+    // AdvertisingChannelSubType.DISPLAY_GMAIL), BiddingStrategyType.TARGET_CPA,
+    // and BudgetType.FIXED_CPA. The customer must also be eligible for this
+    // mode. See Customer.eligibility_failure_reasons for details.
+    CONVERSIONS = 6;
+
+    // Pay per guest stay value. This mode is only supported by campaigns with
+    // AdvertisingChannelType.HOTEL, BiddingStrategyType.COMMISSION, and
+    // BudgetType.STANDARD.
+    GUEST_STAY = 7;
+  }
+}
+
+// An immutable specialization of an Advertising Channel.
+message AdvertisingChannelSubTypeEnum {
+  // Enum describing the different channel subtypes.
+  enum AdvertisingChannelSubType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used as a return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Mobile app campaigns for Search.
+    SEARCH_MOBILE_APP = 2;
+
+    // Mobile app campaigns for Display.
+    DISPLAY_MOBILE_APP = 3;
+
+    // AdWords express campaigns for search.
+    SEARCH_EXPRESS = 4;
+
+    // AdWords Express campaigns for display.
+    DISPLAY_EXPRESS = 5;
+
+    // Smart Shopping campaigns.
+    SHOPPING_SMART_ADS = 6;
+
+    // Gmail Ad campaigns.
+    DISPLAY_GMAIL_AD = 7;
+
+    // Smart display campaigns.
+    DISPLAY_SMART_CAMPAIGN = 8;
+
+    // Video Outstream campaigns.
+    VIDEO_OUTSTREAM = 9;
+
+    // Video TrueView for Action campaigns.
+    VIDEO_ACTION = 10;
+
+    // Video campaigns with non-skippable video ads.
+    VIDEO_NON_SKIPPABLE = 11;
+
+    // App Campaign that allows you to easily promote your Android or iOS app
+    // across Google's top properties including Search, Play, YouTube, and the
+    // Google Display Network.
+    APP_CAMPAIGN = 12;
+
+    // App Campaign for engagement, focused on driving re-engagement with the
+    // app across several of Google’s top properties including Search, YouTube,
+    // and the Google Display Network.
+    APP_CAMPAIGN_FOR_ENGAGEMENT = 13;
+
+    // Campaigns specialized for local advertising.
+    LOCAL_CAMPAIGN = 14;
+
+    // Shopping Comparison Listing campaigns.
+    SHOPPING_COMPARISON_LISTING_ADS = 15;
+
+    // Standard Smart campaigns.
+    SMART_CAMPAIGN = 16;
+
+    // Video campaigns with sequence video ads.
+    VIDEO_SEQUENCE = 17;
+  }
+}
+// The channel type a campaign may target to serve on.
+message AdvertisingChannelTypeEnum {
+  // Enum describing the various advertising channel types.
+  enum AdvertisingChannelType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Search Network. Includes display bundled, and Search+ campaigns.
+    SEARCH = 2;
+
+    // Google Display Network only.
+    DISPLAY = 3;
+
+    // Shopping campaigns serve on the shopping property
+    // and on google.com search results.
+    SHOPPING = 4;
+
+    // Hotel Ads campaigns.
+    HOTEL = 5;
+
+    // Video campaigns.
+    VIDEO = 6;
+
+    // App Campaigns, and App Campaigns for Engagement, that run
+    // across multiple channels.
+    MULTI_CHANNEL = 7;
+
+    // Local ads campaigns.
+    LOCAL = 8;
+
+    // Smart campaigns.
+    SMART = 9;
+  }
+}
+
+// Enum describing possible serving statuses.
+enum AdServingOptimizationStatus {
+  // No value has been specified.
+  UNSPECIFIED = 0;
+
+  // The received value is not known in this version.
+  //
+  // This is a response-only value.
+  UNKNOWN = 1;
+
+  // Ad serving is optimized based on CTR for the campaign.
+  OPTIMIZE = 2;
+
+  // Ad serving is optimized based on CTR * Conversion for the campaign. If
+  // the campaign is not in the conversion optimizer bidding strategy, it will
+  // default to OPTIMIZED.
+  CONVERSION_OPTIMIZE = 3;
+
+  // Ads are rotated evenly for 90 days, then optimized for clicks.
+  ROTATE = 4;
+
+  // Show lower performing ads more evenly with higher performing ads, and do
+  // not optimize.
+  ROTATE_INDEFINITELY = 5;
+
+  // Ad serving optimization status is not available.
+  UNAVAILABLE = 6;
+}
+
+message CampaignServingStatusEnum {
+  // Possible serving statuses of a campaign.
+  enum CampaignServingStatus {
+    // No value has been specified.
+    UNSPECIFIED = 0;
+
+    // The received value is not known in this version.
+    //
+    // This is a response-only value.
+    UNKNOWN = 1;
+
+    // Serving.
+    SERVING = 2;
+
+    // None.
+    NONE = 3;
+
+    // Ended.
+    ENDED = 4;
+
+    // Pending.
+    PENDING = 5;
+
+    // Suspended.
+    SUSPENDED = 6;
+  }
+}
+
+message CampaignStatusEnum {
+  enum CampaignStatus {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // Campaign is currently serving ads depending on budget information.
+    ENABLED = 2;
+
+    // Campaign has been paused by the user.
+    PAUSED = 3;
+
+    // Campaign has been removed.
+    REMOVED = 4;
+  }
+}
+
+// Container for enum describing campaign experiment type.
+message CampaignExperimentTypeEnum {
+  // Indicates if this campaign is a normal campaign,
+  // a draft campaign, or an experiment campaign.
+  enum CampaignExperimentType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // Used for return value only. Represents value unknown in this version.
+    UNKNOWN = 1;
+
+    // This is a regular campaign.
+    BASE = 2;
+
+    // This is a draft version of a campaign.
+    // It has some modifications from a base campaign,
+    // but it does not serve or accrue metrics.
+    DRAFT = 3;
+
+    // This is an experiment version of a campaign.
+    // It has some modifications from a base campaign,
+    // and a percentage of traffic is being diverted
+    // from the BASE campaign to this experiment campaign.
+    EXPERIMENT = 4;
+  }
+}
+
+// Container for enum describing possible negative geo target types.
+message NegativeGeoTargetTypeEnum {
+  // The possible negative geo target types.
+  enum NegativeGeoTargetType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // The value is unknown in this version.
+    UNKNOWN = 1;
+
+    // Specifies that a user is excluded from seeing the ad if they
+    // are in, or show interest in, advertiser's excluded locations.
+    PRESENCE_OR_INTEREST = 4;
+
+    // Specifies that a user is excluded from seeing the ad if they
+    // are in advertiser's excluded locations.
+    PRESENCE = 5;
+  }
+}
+
+// Container for enum describing possible positive geo target types.
+message PositiveGeoTargetTypeEnum {
+  // The possible positive geo target types.
+  enum PositiveGeoTargetType {
+    // Not specified.
+    UNSPECIFIED = 0;
+
+    // The value is unknown in this version.
+    UNKNOWN = 1;
+
+    // Specifies that an ad is triggered if the user is in,
+    // or shows interest in, advertiser's targeted locations.
+    PRESENCE_OR_INTEREST = 5;
+
+    // Specifies that an ad is triggered if the user
+    // searches for advertiser's targeted locations.
+    // This can only be used with Search and standard
+    // Shopping campaigns.
+    SEARCH_INTEREST = 6;
+
+    // Specifies that an ad is triggered if the user is in
+    // or regularly in advertiser's targeted locations.
+    PRESENCE = 7;
+  }
+}
+
+message NetworkSetting {
+  bool target_content_network = 1;
+  bool target_google_search = 2;
+  bool target_partner_search_network = 3;
+  bool target_search_network = 4;
+}
+
+message HotelSetting {
+  int64 hotel_center_id = 1;
+}
+
+message TrackingSetting {
+  string tracking_url = 1;
+}
+
+message SelectiveOptimization {
+  repeated string conversion_actions = 1;
+}
+
+message GeoTargetTypeSetting {
+  NegativeGeoTargetTypeEnum.NegativeGeoTargetType negative_geo_target_type = 1;
+  PositiveGeoTargetTypeEnum.PositiveGeoTargetType positive_geo_target_type = 2;
+}
+
+message ShoppingSetting {
+  int32 campaign_priority = 1;
+  bool enable_local = 2;
+  int64 merchant_id = 3;
+  string sales_country = 4;
+}
+
+message DynamicSearchAdsSetting {
+  string domain_name = 1;
+  repeated string feeds = 2;
+  string language_code = 3;
+  bool use_supplied_urls_only = 4;
+}
+
+message Campaign {
+  int64 id = 1;
+  string name = 2;
+  string tracking_url_template = 3;
+  string base_campaign = 4;
+  string campaign_budget = 5;
+  string start_date = 6;
+  string end_date = 7;
+  string final_url_suffix = 8;
+  float optimization_score = 9;
+  string resource_name = 10;
+  CampaignStatusEnum.CampaignStatus status = 11;
+  CampaignServingStatusEnum.CampaignServingStatus serving_status = 12;
+  AdServingOptimizationStatus ad_serving_optimization_status = 13;
+  AdvertisingChannelTypeEnum.AdvertisingChannelType advertising_channel_type = 14;
+  AdvertisingChannelSubTypeEnum.AdvertisingChannelSubType advertising_channel_sub_type = 15;
+  string accessible_bidding_strategy = 16;
+  PaymentModeEnum.PaymentMode payment_mode = 17;
+  repeated string labels = 18;
+  bool real_time_bidding_setting = 19;
+  repeated string url_custom_parameters = 20;
+  NetworkSetting network_settings = 21;
+  HotelSetting hottel_settings = 22;
+  DynamicSearchAdsSetting dynamic_search_ads_setting = 23;
+  ShoppingSetting shopping_setting = 24;
+  GeoTargetTypeSetting geo_target_type_setting = 25;
+  LocationSourceTypeEnum.LocationSourceType local_campaign_setting = 26;
+  CampaignExperimentTypeEnum.CampaignExperimentType experiment_type = 27;
+  BrandSafetySuitabilityEnum.BrandSafetySuitability video_brand_safety_suitability = 28;
+  VanityPharmaDisplayUrlModeEnum.VanityPharmaDisplayUrlMode vanity_pharma_display_url_mode = 29;
+  VanityPharmaTextEnum.VanityPharmaText vanity_pharma_text = 30;
+  SelectiveOptimization selective_optimization = 31;
+  OptimizationGoalTypeEnum.OptimizationGoalType optimization_goal_types = 32;
+  TrackingSetting tracking_setting = 33;
+  AssetFieldTypeEnum.AssetFieldType excluded_parent_asset_field_types = 34;
+}
+
+message GetCampaignsResponse{
+  repeated Campaign campaign = 1;
+}
+
+message GetAdGroupsRequest{
+  string customer_id = 1;
+  string token = 2;
+}
+
+message AdGroup {
+  int64 id = 1;
+  string name = 2;
+  string base_ad_group = 3;
+  string tracking_url_template = 4;
+  string campaign = 5;
+  int64 cpc_bid_micros = 6;
+  int64 cpm_bid_micros = 7;
+  int64 target_cpa_micros = 8;
+  int64 cpv_bid_micros = 9;
+  int64 target_cpm_micros = 10;
+  float target_roas = 11;
+  int64 percent_cpc_bid_micros = 12;
+  string final_url_suffix = 13;
+  int64 effective_target_cpa_micros = 14;
+  float effective_target_roas = 15;
+  string resource_name = 16;
+  repeated string labels = 17;
+}
+
+message GetAdGroupsResponse{
+  repeated AdGroup adGroup = 1;
+}
+
+message GetAdGroupsAdRequest{
+  string CustomerId = 1;
+  string token = 2;
+}
+
+message AdGroupAd {
+  int64 id = 1;
+  string name = 2;
+  string resource_name = 3;
+  repeated string url_collections = 4;
+  string display_url = 5;
+  string tracking_url_template = 6;
+  bool added_by_google_ads = 7;
+  repeated string final_urls = 8;
+  repeated string final_app_urls = 9;
+  repeated string final_mobile_urls = 10;
+  string final_url_suffix = 11;
+}
+
+message GetAdGroupsAdResponse{
+  repeated AdGroupAd ads = 1;
+}
+
